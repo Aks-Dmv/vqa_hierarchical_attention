@@ -11,10 +11,17 @@ We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www
 2. Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
 
 ## Results
-We should note that we exclude the unknown ground truth answers. If the unknown answers are included, then we observe a 10%.
+We should note that we exclude the unknown ground truth answers durign training. If the unknown answers are included, then we observe a 10%. Below, we show the baseline (green) performance in comparison with the co-attention method (blue).
 
 <p align="center">
-<img src="images/loss1.png" width="600px"/>
+<img src="images/loss2.png" width="400px"/> <img src="images/acc2.png" width="400px"/>
+</p>
+
+### Sample Answers
+We include sample answers from the co-attention model below:
+
+<p align="center">
+<img src="images/ans1.png" width="400px"/> <img src="images/ans2.png" width="400px"/>
 </p>
 
 ## Getting Started
