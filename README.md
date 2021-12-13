@@ -10,7 +10,9 @@ We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www
 
 2. Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
 
-## Software setup
+## Getting Started
+
+### Software setup
 
 We will use the following python libraries for the homework:
 
@@ -20,8 +22,6 @@ We will use the following python libraries for the homework:
 4. tensorboardX
 
 A python 3.6 compatible VQA API has been provided in the `external` folder of this repository, courtesy of [16-824: VLR](https://visual-learning.cs.cmu.edu/).
-
-## Getting Started
 
 ### Downloading dataset
 
