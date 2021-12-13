@@ -13,6 +13,10 @@ We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www
 ## Results
 We should note that we exclude the unknown ground truth answers. If the unknown answers are included, then we observe a 10%.
 
+<p align="center">
+<img src="images/loss1.png" width="600px"/>
+</p>
+
 ## Getting Started
 
 ### Software setup
