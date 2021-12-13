@@ -6,9 +6,9 @@ This repository was created in partial fulfillment for the course [Visual Learni
 
 We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www.tensorflow.org/tensorboard/) for visualizations and logging. This repository contains a PyTorch implementation of the following papers:
 
-[2] Simple Baseline for Visual Question Answering (Zhou et al, 2015): https://arxiv.org/pdf/1512.02167.pdf
+1. Simple Baseline for Visual Question Answering (Zhou et al, 2015): https://arxiv.org/pdf/1512.02167.pdf
 
-[3] Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
+2. Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
 
 ## Software setup
 
@@ -50,37 +50,15 @@ Download the files to a single folder. After that, `unzip` the files. Now you sh
     train2014/
     val2014/
 
-### Prepare the dataset for PyTorch
+### Design decisions for data loading with PyTorch
 
 We implemented customized dataloader, a subclass of `torch.utils.data.Dataset` (https://pytorch.org/docs/stable/data.html), 
-to provide easy access to the VQA data. You will find the details in the file `student_code/vqa_dataset.py`.
+to provide easy access to the VQA data, and includes multi-threaded data loading. You will find the details in the file `student_code/vqa_dataset.py`. We use a closed vocabulary for the question embedding. In other words, we choose a set of words that has the **highest frequency** in the training set. All the remaining words will be considered as an 'unknown' class.
 
-#### Closed vocabulary
 
-We used a closed vocabulary for the question embedding. In other words, we choose a set of words that has the **highest frequency** in the training set. All the remaining words will be considered as an 'unknown' class.
+Some answers could have multiple words, such as semi circle. Despite the fact that such answers comprise of multiple words, they must be treated as an atomic answer, where the entire phrase is treated as the answer and the corresponding token/ID is generated for the phrase/sentence. Thus we have one ID per sentence.
 
-**1.4 Finish the `_create_word_list` function. It should split a list of question sentences into words.** Hints: 1. Convert any upper case alphabet to lower case. 2. Remove all punctuations before splitting.
-
-**1.5 Finish the `_create_id_map` function. It should pick out the most frequent strings and create a mapping to their IDs.**
-
-**1.6 Using the previous functions, assign `self.question_word_to_id_map` in the `__init__` function.** It will be used to create one-hot embedding of questions later. Hint: the number of words to use is passed into the `__init__` as an argument.
-
-**1.7 Assign `self.answer_to_id_map` in the `__init__` function. Different from the word-level question embedding, the answer embedding is sentence-level (one ID per sentence). Why is it?**
-
-#### Utilize the PyTorch data loading mechanism
-
-As you can see in our code, our `VqaDataset` class is [inherited](https://docs.python.org/3/tutorial/classes.html#inheritance) from `torch.utils.data.Dataset` class. This allows us to use the PyTorch data loading API that conveniently supports features including multi-thread data loading. Feel free to refer to the [official PyTorch tutorial](https://pytorch.org/tutorials/beginner/data_loading_tutorial.html).
-
-We need to implement two methods for the `VqaDataset` class: `__len__` and `__getitem__`. `__len__` should return the size of the dataset; it is called when you pass an instance of the class to `len()`. `__getitem__` returns the `idx`-th item of the dataset; it is called when an instance of the class is indexed using `[idx]`, or iterated through using for loop.
-
-**1.8 Implement the `__len__` function of the `VqaDataset` class. Should the size of the dataset equal the number of images, questions or the answers? Show your reasoning.**
-
-**1.9 Implement the `__getitem__` function. You need to (1) figure out what is the `idx`-th item of the dataset; (2) load the associated image; (3) encode the question and answers.**
-
-1. For now, assume that `cache_location` and `pre_encoder` are both `None`. We will come back to this in Task 3.
-2. After you load the image, apply `self._transform` if it exists; otherwise apply `torchvision.transforms.ToTensor`.
-3. Create **word-level one-hot encoding** for the question. Make sure that your implementation handles words not in the vocabulary. You also need to handle sentensences of varying lengths. Check out the `self._max_question_length` parameter in the `__init__` function. How do you handle questions of different lengths? Describe in words, what is the dimension of your output tensor?
-4. Create sentence-level **one-hot encoding** for the answers. 10 answers are provided for each question. Encode each of them and stack together. Again, make sure to handle the answers not in the answer list. What is the dimension of your output tensor?
+If the question length is larger than 26, we trim the question and ignore the words after the 26th word. We handle questions of variable length less than 26, by padding our sequence. The output shape of the question tensor is (26 x 5747). We create sentence-level **one-hot encodings** for the answers. 10 answers are provided for each question. We encode each of them and stack them together, giving us an output shape of the answer tensor is (10 x 5217). Again, we make sure to handle the answers not in the answer list by mapping them to an 'unknown' class.
 
 ## Task 2: Simple Baseline (30 points)
 For this task you will implement the simple method described in [2]. This serves to validate your dataset and provide
