@@ -14,16 +14,13 @@ We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www
 
 We will use the following python libraries for the homework:
 
-1. PyTorch 1.6.0
-1. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
-1. tensorboardX
-1. Any other standard libraries you wish to use (numpy, scipy, PIL, etc). If you're unsure whether a library is allowed, please ask.
+1. Python 3.6
+2. PyTorch 1.6.0
+3. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
+4. tensorboardX
+5. Any other standard libraries you wish to use (numpy, scipy, PIL, etc).
 
-Please use Python 3.6. The VQA API is in Python 2.7; for convenience we have provided a version that has been
-converted to work with Python 3. 
-
-Everything you are asked to implement is in the folder student_code. What is already provided there is intended as a launching point for
-your implementation. Feel free to add arguments, restructure, etc.
+A python 3.6 compatible VQA API has been provided in the external folder of this repository, courtesy of [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/).
 
 ## Task 1: Data Loader (30 points)
 In this task you will write a dataset loader for VQA (1.0 Real Images, Open-Ended). You should look over the 
