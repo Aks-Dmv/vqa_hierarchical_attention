@@ -19,33 +19,29 @@ We will use the following python libraries for the homework:
 3. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
 4. tensorboardX
 
-A python 3.6 compatible VQA API has been provided in the external folder of this repository, courtesy of [16-824: VLR](https://visual-learning.cs.cmu.edu/).
+A python 3.6 compatible VQA API has been provided in the `external` folder of this repository, courtesy of [16-824: VLR](https://visual-learning.cs.cmu.edu/).
 
-## Task 1: Data Loader (30 points)
-In this task you will write a dataset loader for VQA (1.0 Real Images, Open-Ended). You should look over the 
-original VQA paper [1] to get an idea for this dataset and the task you're about to do.
+## Getting Started
 
-More specifically your goal for this task is to implement a subclass of `torch.utils.data.Dataset` (https://pytorch.org/docs/stable/data.html) 
-to provide easy access to the VQA data for the latter parts of this assignment.
+### Downloading dataset
 
-### Before you start
+The full dataset itself is quite large (the COCO training images are ~13 GB, for instance), and we need to download (only 'Real Images', not 'Abstract Scenes') the train and validation data from [here](https://visualqa.org/vqa_v1_download.html) .
 
-The full dataset itself is quite large (the COCO training images are ~13 GB, for instance). For convenience we've provided 
-an extremely trimmed down version in the test folder (one image and a couple corresponding questions and annotations) for your convenience. The test_vqa_dataset.py file in the test folder has a couple simple unit tests that call your implementation using this small dataset. These can be run using `python -m unittest discover test`. You can modify the code to adapt to your own need.
+#### Option 1: using our script
+You can run the `get-dataset.sh` script to get all the necessary data.
 
-The unit tests are quite easy, just a sanity check. The real test will come as you start using it to train your nets. Don't worry if 
-you find yourself coming back to Task 1 and improving it as you progress through the assignment.
+```
+bash get-dataset.sh
+```
 
-### Download dataset
-
-For this assignment, you need to download the train and validation data: https://visualqa.org/vqa_v1_download.html (we only need 'Real Images', not 'Abstract Scenes').
+#### Option 2: Manual Download
 
 1. You'll need to get all three things: the annotations, the questions, and the images for both the training and validation sets.
     1. We're just using the validation set for testing, for simplicity. (In other words, we're not creating a separate set for parameter tuning.)
-1. If you're using AWS Volumes we suggest getting a volume with at least 50 GB for caching (more details in Task 3 below).
-1. We're using VQA v1.0 Open-Ended for easy comparison to the baseline papers. Feel free to experiment with, for example, VQA 2.0 [4] if you feel inclined, though it is not required. 
+1. If you're using AWS Volumes we suggest getting a volume with at least 50 GB for caching.
+1. We're using VQA v1.0 Open-Ended for easy comparison to the baseline papers.
 
-You can use `wget` to download the files to a single folder in AWS volumes. After that, `unzip` the files. Now you should have a directory `$DATA` containing the following items.
+Download the files to a single folder. After that, `unzip` the files. Now you should have a directory `$DATA` containing the following items.
 
     mscoco_train2014_annotations.json
     mscoco_val2014_annotations.json
@@ -54,29 +50,14 @@ You can use `wget` to download the files to a single folder in AWS volumes. Afte
     train2014/
     val2014/
 
-### Understand VQA API
-
-Now let's take a look at the Python API for VQA. Suppose we are at the root directory of this cloned repository. Launch a Python 3 interpretor and run:
-
-    >>> from external.vqa.vqa import VQA
-    >>> vqa = VQA(annotation_json_file_path, question_json_file_path)
-
-where `annotation_json_file_path` and `question_json_file_path` are paths to `mscoco_train2014_annotations.json` and `OpenEnded_mscoco_train2014_questions.json` in the `$DATA` directory. Use the `vqa` object to answer the following question.
-
-**1.1 Which member function of the `VQA` class returns the IDs of all questions in this dataset? How many IDs are there?**
-
-**1.2 What is the content of the question of ID `409380`? What is the ID of the image associated with this question?**
-    Hint for later tasks: This image ID can be padded with 0s (and prefix and suffix) to obtain the image file name.
-
-**1.3 What is the mostly voted answer for this question?**
-
 ### Prepare the dataset for PyTorch
 
-If you can answer the above questions, you should be able to start writing the data loader code. In this section you will fill in the file `student_code/vqa_dataset.py`.
+We implemented customized dataloader, a subclass of `torch.utils.data.Dataset` (https://pytorch.org/docs/stable/data.html), 
+to provide easy access to the VQA data. You will find the details in the file `student_code/vqa_dataset.py`.
 
 #### Closed vocabulary
 
-For this assigment, we will use a closed vocabulary for the question embedding. In other words, we will choose a fixed vocabulary of words in the question sentences and feed them as input into our networks. In particular, we will choose a set of words that has the **highest frequency** in the training set. All the remaining words will be considered as an 'unknown' class. For more details, please refer to our course slides, or [these slides](https://www.dropbox.com/s/84dawq7agq6i6o5/Image%20Captioning%20and%20VQA.pdf?dl=0) from previous year.
+We used a closed vocabulary for the question embedding. In other words, we choose a set of words that has the **highest frequency** in the training set. All the remaining words will be considered as an 'unknown' class.
 
 **1.4 Finish the `_create_word_list` function. It should split a list of question sentences into words.** Hints: 1. Convert any upper case alphabet to lower case. 2. Remove all punctuations before splitting.
 
@@ -206,16 +187,5 @@ Once you finish this part, immediately run `python -m student_code.run_resnet_en
 At this point, you should be able to train you network. You implementation in `student_code/experiment_runner_base.py` for Task 2 should be directly reusable for Task 3.
 
 **3.5 Similar to question 2.10, describe anything special about your implementation in the report. Include your figures of training loss and validation accuracy. Compare the performance of co-attention network to the simple baseline.**
-
-## Task 4: Custom Network  (20 bonus points)
-
-Brainstorm some ideas for improvements to existing methods or novel ways to approach the problem. 
-
-For 10 extra points, pick at least one method and try it out. It's okay if it doesn't beat the baselines, we're looking for 
-creativity here; not all interesting ideas work out. 
-
-**4.1 List a few ideas you think of (at least 3, the more the better).**
-
-**(bonus) 4.2 Implementing at least one of the ideas. If you tweak one of your existing implementations, please copy the network to a new, clearly named file before changing it. Include the training loss and test accuracy graphs for your idea.**
 
 
