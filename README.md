@@ -10,6 +10,9 @@ We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www
 
 2. Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
 
+## Results
+We should note that we exclude the unknown ground truth answers. If the unknown answers are included, then we observe a 10%.
+
 ## Getting Started
 
 ### Software setup
@@ -60,66 +63,44 @@ Some answers could have multiple words, such as semi circle. Despite the fact th
 
 If the question length is larger than 26, we trim the question and ignore the words after the 26th word. We handle questions of variable length less than 26, by padding our sequence. The output shape of the question tensor is (26 x 5747). We create sentence-level **one-hot encodings** for the answers. 10 answers are provided for each question. We encode each of them and stack them together, giving us an output shape of the answer tensor is (10 x 5217). Again, we make sure to handle the answers not in the answer list by mapping them to an 'unknown' class.
 
-## Task 2: Simple Baseline (30 points)
-For this task you will implement the simple method described in [2]. This serves to validate your dataset and provide
-a baseline to compare the future tasks against.
+## Pytorch Implementation of Simple Baseline
+We describe the implementation of the simple method described in [2]. This serves to validate our Co-Attention model and provides a strong baseline for comparison.
 
-We've provided a skeleton to get you started. Here's a quick overview:
+To run the code, you can do:
 
-1. The entry point is main.py, which can be run with `python -m student_code.main` plus any arguments (refer to main.py for the list).
-1. Main will, by default, create a SimpleBaselineExperimentRunner.py, which subclasses ExperimentRunnerBase.
-1. ExperimentRunnerBase runs the training loop and validation.
-1. SimpleBaselineExperimentRunner is responsible for creating the datasets, creating the model (SimpleBaselineNet), and running optimization.
-    1. In general anything SimpleBaseline-specific should be put in here, not in the base class.
+```python
+python -m student_code.main --log_validation --num_epochs 4
+```
 
-You need not stick strictly to the established structure. Feel free to make changes as desired.
+We implement a frquency based adaptation of the bag of word representation, which is a vector that encodes a sentence based on the frequency of the words that appear in it. We can create a bag of words representation by summing the tensor along the sentence dimension, and converting it into the 0-1 representation by just assigning 1 to values greater than 0. For the bag of words vector, the paper mentioned that the output should be converted to the range of [0, 1]. However, in my implementation I used the frequency vectors and observed competitive performance.
 
-Be mindful of your AWS usage if applicable. If you find yourself using too much, you may wish to use a subset of the dataset for debugging, 
-for instance a particular question type (e.g "what color is the"). 
+The advantages of a bag of words representation is that it is simple and elegant to use. It is also computationally efficient. While, the disadvantage is that you lose spatial information as your are summing up along the sentence.
 
-Feel free to refer to the official implementation in Torch (https://github.com/metalbubble/VQAbaseline),
-for instance to find the parameters they used to avoid needing to do a comprehensive parameter search.
-
-***
-
-**2.1 This paper uses 'bag-of-words' for question representation. What are the advantage and disadvantage of this type of representation? How do you convert the one-hot encoding loaded in question 1.9 to 'bag-of-words'?**
-
-Let's start with the network structure. This paper uses the output of pretrained GoogLeNet as visual features. An implementation of GoogLeNet is provided in `external/googlenet/googlenet.py`.
+We use the output of pretrained GoogLeNet as visual features. An implementation of GoogLeNet is provided in `external/googlenet/googlenet.py`.
     
-**2.2 What are the 3 major components of the network used in this paper? What are the dimensions of input and output for each of them (including batch size)? In `student_code/simple_baseline_net.py`, implement the network structure.**
+We provide a brief overview shapes of the internal represenations. This could provide a better intuition of the computation graph. 
 
-**2.3 In `student_code/simple_baseline_experiment_runner.py`, set up transform applied to input images.** The transform will be passed into the dataset class. It should be a composition of
+1. input shape of pre-trained feature extractor is: `torch.Size([100, 3, 224, 224]) `
 
-1. Resizing to fit network input size;
-1. Normalize to [0, 1] and convert from (H, W, 3) to (3, H, W);
-1. Subtract mean [0.485, 0.456, 0.406] and divide by standard deviation [0.229, 0.224, 0.225] computed from ImageNet for each channel.
+1. output shape of pre-trained feature extractor is: `torch.Size([100, 1024])`
 
-Hint: check out `torchvision.transforms.Compose` and `torchvision.transforms.ToTensor`.
+1. input shape of word features encoder is: `torch.Size([100, 5747])`
 
-**2.4 In `student_code/simple_baseline_experiment_runner.py`, specify the arguments `question_word_to_id_map` and `answer_to_id_map` passed into `VqaDataset`. Explain how you are handling the training set and validation set differently.**
+1. output shape of word features encoder is: `torch.Size([100, 1024])`
 
-**2.5 In `student_code/simple_baseline_experiment_runner.py`, set up the PyTorch optimizer. In Section 3.2 of the paper, they explain that they use a different learning rate for word embedding layer and softmax layer. We recommend a learning rate of 0.8 for word embedding layer and 0.01 for softmax layer, both with SGD optimizer. Explain how this is achieved in your implementation.**
+1. input shape of output or softmax layer is: `torch.Size([100, 2048])` 
 
-`SimpleBaselineExperimentRunner` is a subclass of `ExperimentRunnerBase`. This is a great way to enable code reuse and make your code more structured. Implementations in `ExperimentRunnerBase` should be generic, not specific to Task 2 or 3.
+1. output shape of output or softmax layer is: `torch.Size([100, 5217])`
 
-**2.6 In `student_code/experiment_runner_base.py`, get the predicted answer and ground truth answer.** Notice that 10 annotated answers are loaded for each question. You should do a majority voting to get a single ground truth answer for training.
 
-The member function `ExperimentRunnerBase._optimize` is left to be implemented in its subclasses. This makes it a [pure virtual function](https://en.wikipedia.org/wiki/Virtual_function#Abstract_classes_and_pure_virtual_functions) from the perspective of Object-Oriented Programming (OOP). 
-
-**2.7 In `student_code/simple_baseline_experiment_runner.py`, implement the `_optimize` function. In Section 3.2 of the paper, they mention weight clip. This means to clip network weight data and gradients that have a large absolute value. We recommend a threshold of 1500 for the word embedding layer weights, 20 for the softmax layer weights, and 20 for weight gradients. What loss function do you use?**
-
-**2.8 In `student_code/experiment_runner_base.py`, implement the `validate` function.** If you want to, you can shuffle the validation dataset and only use a subset of it (at least 1,000) each time.
-
-**2.9 Use Tensorboard to graph your loss and validation accuracies as you train. During validation, also log the input image, input question, predicted answer and ground truth answer (one example per validation is enough). This helps you validate your network output.**
-
-Now, we are ready to train the model. Aim for a validation accuracy of 50%, though anything over 40% is okay. Remember to specify `--log_validation` in your command line argument.
-
-**2.10 Describe anything special about your implementation in the report. Include your figures of training loss and validation accuracy. Also show input, prediction and ground truth in 3 different iterations.**
-
-## Task 3: Co-Attention Network (30 points)
+## Pytorch Implementation of Alternating Co-Attention
 
 In this task you'll implement [3]. This paper introduces three things not used in the Simple Baseline paper: hierarchical question processing, attention, and 
 the use of recurrent layers.
+
+```python
+python -m student_code.main --log_validation --num_epochs 4 --model coattention
+```
 
 The paper explains attention fairly thoroughly, so we encourage you to, in particular, closely read through section 3.3 of the paper.
 
