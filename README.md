@@ -18,10 +18,14 @@ We should note that we exclude the unknown ground truth answers durign training.
 </p>
 
 ### Sample Answers
-We include sample answers from the co-attention model below:
+We include sample answers from the co-attention model below. We also include the four pictures that are in question.
 
 <p align="center">
-<img src="images/ans1.png" width="400px"/> <img src="images/ans2.png" width="400px"/>
+<img src="images/pics.png" width="500px"/> 
+</p>
+
+<p align="center">
+<img src="images/ans0.png" width="250px"/> <img src="images/ans1.png" width="250px"/> <img src="images/ans2.png" width="250px"/> <img src="images/ans3.png" width="250px"/>
 </p>
 
 ## Getting Started
