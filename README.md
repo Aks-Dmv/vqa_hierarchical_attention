@@ -1,26 +1,14 @@
 # Hierarchical Visual Question Answering using Alternating Co-Attention
 
-- [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/index.html)
-- Modified by: [Ziyan Wang](https://ziyanw1.github.io/)
-- Created By: [Sam Powers](https://www.ri.cmu.edu/ri-people/samantha-powers/), [Kenny Marino](http://kennethmarino.weebly.com/), [Donglai Xiang](https://xiangdonglai.github.io/)
-- TAs: [Helen Jiang], [Jielin Qiu]
-- Please post questions, if any, on the piazza for HW3.
-- Total points: 90 + 20(bonus)
-- Due Date: November 23, 2021 at 11:59pm EST.
-- Please start EARLY!
+This repository was created in partial fulfillment for the course [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/), which I took at CMU. 
 
-In this assignment you will do three main things: 
 
-1. Load the VQA dataset [1]
-1. Implement Simple Baseline for Visual Question Answering [2]
-1. Implement Hierarchical Question-Image Co-Attention for Visual Question Answering [3]
 
-**Submission Requirements**:
+We use [PyTorch](pytorch.org) to create our models and [TensorBoard](https://www.tensorflow.org/tensorboard/) for visualizations and logging. This repository contains a PyTorch implementation of the following papers:
 
-* Please submit your report as well as your code.
-* At the beginning of the report, please include a section which lists all the commands for TAs to run your code.
-* You should include a Google Drive link to download your trained models and tensorboard files.
-* You should also mention any collaborators or other sources used for different parts of the assignment.
+[2] Simple Baseline for Visual Question Answering (Zhou et al, 2015): https://arxiv.org/pdf/1512.02167.pdf
+
+[3] Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
 
 ## Software setup
 
@@ -235,55 +223,3 @@ creativity here; not all interesting ideas work out.
 **(bonus) 4.2 Implementing at least one of the ideas. If you tweak one of your existing implementations, please copy the network to a new, clearly named file before changing it. Include the training loss and test accuracy graphs for your idea.**
 
 
-## Relevant papers:
-[1] VQA: Visual Question Answering (Agrawal et al, 2016): https://arxiv.org/pdf/1505.00468v6.pdf
-
-[2] Simple Baseline for Visual Question Answering (Zhou et al, 2015): https://arxiv.org/pdf/1512.02167.pdf
-
-[3] Hierarchical Question-Image Co-Attention for Visual Question Answering (Lu et al, 2017):  https://arxiv.org/pdf/1606.00061.pdf
-
-[4] Making the V in VQA Matter: Elevating the Role of Image Understanding in Visual Question Answering (Goyal, Khot et al, 2017):  https://arxiv.org/pdf/1612.00837.pdf
-
-[5] Stacked Attention Networks for Image Question Answering (Yang et al, 2016): https://arxiv.org/pdf/1511.02274.pdf
-
-## Submission Checklist 
-### Report
-
-List of commands to run your code
-
-Google Drive Link to your model and tensorboard file
-
-Specification of collaborators and other sources
-
-Your response to questions
-
-* 1.1 (4 pts)
-* 1.2 (4 pts)
-* 1.3 (4 pts)
-* 1.7 (4 pts)
-* 1.8 (5 pts)
-* 1.9.3 (5 pts)
-* 1.9.4 (4 pts)
-* 2.1 (4 pts)
-* 2.2 (4 pts)
-* 2.4 (4 pts)
-* 2.5 (4 pts)
-* 2.7 (4 pts)
-* 2.10 (10 pts)
-* 3.1 (4 pts)
-* 3.3.1 (4 pts)
-* 3.3.2 (4 pts)
-* 3.3.3 (4 pts)
-* 3.5 (14 pts)
-* 4.1 (bonus 10 pts)
-* 4.2 (bonus 10 pts)
-
-### Files
-Your `student_code` folder.
-
-### Update Nov 17, 2021
-Q: When calculating the accuracy, how can we handle the unknown answer?
-
-A: You could ignore the "unknown" answer entry for counting correctness. It still gets counted as wrong. i.e., 
-
-if answer_id is not self._val_dataset_loader.dataset.unknown_answer_index: num_correct += answer_score
