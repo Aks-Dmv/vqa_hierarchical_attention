@@ -128,7 +128,7 @@ python -m driver_code.run_resnet_encoder
 
 1. My code has been modularized into 4 classes: MaxGramExtractor, HierarchicalQEncoding, AlternatingAttention, and CoattentionNet. Furthermore, I created an attetion operator function and a crossAttention function in the AlternatingAttention class to help reuse repetitive attention operations.
 
-1. In my implementation, I have included a densify_oneHot layer in my MaxGramExtractor class that coverts the question embedding, which is a one-hot vector, into a latent vector that is of size 512. This operation helps to make training better as the original one-hot vector is quite sparse. An extension which could be  interesting would be Glove Embeddings.
+1. In my implementation, I have included a densify_oneHot layer in my `MaxGramExtractor` class that coverts the question embedding, which is a one-hot vector, into a latent vector that is of size 512. This operation helps to make training better as the original one-hot vector is quite sparse. An extension which could be  interesting would be Glove Embeddings.
 
 
 
