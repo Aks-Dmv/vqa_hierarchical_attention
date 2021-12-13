@@ -25,7 +25,7 @@ We include sample answers from the co-attention model below. We also include the
 </p>
 
 <p align="center">
-<img src="images/ans0.png" width="250px"/> <img src="images/ans1.png" width="250px"/> <img src="images/ans2.png" width="250px"/> <img src="images/ans3.png" width="250px"/>
+<img src="images/ans0.png" width="200px"/> <img src="images/ans1.png" width="200px"/> <img src="images/ans2.png" width="200px"/> <img src="images/ans3.png" width="200px"/>
 </p>
 
 ## Getting Started
