@@ -18,7 +18,6 @@ We will use the following python libraries for the homework:
 2. PyTorch 1.6.0
 3. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
 4. tensorboardX
-5. Any other standard libraries you wish to use (numpy, scipy, PIL, etc).
 
 A python 3.6 compatible VQA API has been provided in the external folder of this repository, courtesy of [16-824: VLR](https://visual-learning.cs.cmu.edu/).
 
