@@ -1,6 +1,6 @@
 # Hierarchical Visual Question Answering using Alternating Co-Attention
 
-This repository was created in partial fulfillment for the course [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/), which I took at CMU. 
+This repository was created in partial fulfillment for the course [16-824: VLR](https://visual-learning.cs.cmu.edu/), which I took at CMU. 
 
 
 
