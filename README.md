@@ -1,4 +1,4 @@
-# Assignment 3: Visual Question Answering with PyTorch!
+# Hierarchical Visual Question Answering using Alternating Co-Attention
 
 - [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/index.html)
 - Modified by: [Ziyan Wang](https://ziyanw1.github.io/)
