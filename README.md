@@ -1,6 +1,6 @@
 # Hierarchical Visual Question Answering using Alternating Co-Attention
 
-This repository was created in partial fulfillment for the course [16-824: VLR](https://visual-learning.cs.cmu.edu/), which I took at CMU. 
+This repository was created in partial fulfillment for the course [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/), which I took at CMU. 
 
 
 
@@ -20,7 +20,7 @@ We will use the following python libraries for the homework:
 4. tensorboardX
 5. Any other standard libraries you wish to use (numpy, scipy, PIL, etc).
 
-A python 3.6 compatible VQA API has been provided in the external folder of this repository, courtesy of [Visual Learning and Recognition (16-824) Fall 2021](https://visual-learning.cs.cmu.edu/).
+A python 3.6 compatible VQA API has been provided in the external folder of this repository, courtesy of [16-824: VLR](https://visual-learning.cs.cmu.edu/).
 
 ## Task 1: Data Loader (30 points)
 In this task you will write a dataset loader for VQA (1.0 Real Images, Open-Ended). You should look over the 
